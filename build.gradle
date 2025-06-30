@@ -10,8 +10,11 @@ repositories {
 }
 
 dependencies {
+    implementation("com.translated.lara:lara-sdk:1.2.3")
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+    implementation 'com.github.kwhat:jnativehook:2.2.2'
 }
 
 test {
