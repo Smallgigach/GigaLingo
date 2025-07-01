@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'org.example'
@@ -16,7 +17,17 @@ dependencies {
     implementation 'io.github.cdimascio:java-dotenv:5.2.2'
     implementation 'com.github.kwhat:jnativehook:2.2.2'
 }
-
+application {
+    mainClass = 'org.main.Main'
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 test {
     useJUnitPlatform()
+}
+tasks.named('run') {
+    standardInput = System.in
 }

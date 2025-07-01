@@ -1,14 +1,12 @@
 package org.main;
 
-
-import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
-import org.ApiAndKeyBoard.GlobalKeyListener;
+import org.LaunchProduct.StartAndRestart;
 
 
 public class Main {
     public static void main(String[] args) throws NativeHookException {
-        GlobalScreen.registerNativeHook();
-        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
+     StartAndRestart startAndRestart = new StartAndRestart();
+     startAndRestart.startProgram();
     }
 }
