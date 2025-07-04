@@ -4,6 +4,7 @@ import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.translated.lara.Credentials;
+import com.translated.lara.errors.LaraException;
 import com.translated.lara.translator.TextResult;
 import com.translated.lara.translator.Translator;
 import org.LaunchProduct.StartAndRestart;
@@ -13,7 +14,7 @@ import org.main.Main;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
-
+import java.util.concurrent.CompletableFuture;
 public class GlobalKeyListener extends TranslatedEnvReader  implements NativeKeyListener {
   protected    String data;
      public void nativeKeyPressed(NativeKeyEvent e) {
@@ -28,12 +29,24 @@ public class GlobalKeyListener extends TranslatedEnvReader  implements NativeKey
                  } catch (UnsupportedFlavorException | IOException exception) {
                      throw new RuntimeException(exception);
                  }
+
                  try {
                      StartAndRestart startAndRestart = new StartAndRestart();
-                     Credentials cred = new Credentials(secretKeyIdEnv, secretKeyEnv);
-                     Translator translator = new Translator(cred);
-                     TextResult result = translator.translate(data, startAndRestart.source, startAndRestart.target);
-                     System.out.println("Перевод: " + result.getTranslation());
+                     CompletableFuture<Void> future =  CompletableFuture.runAsync(() -> {
+                         Credentials cred = new Credentials(secretKeyIdEnv, secretKeyEnv);
+                         Translator translator = new Translator(cred);
+                         try {
+                             TextResult result = translator.translate(data, startAndRestart.source, startAndRestart.target);
+                             System.out.println("Перевод: " + result.getTranslation());
+
+                         } catch (LaraException ex) {
+                             System.err.println("нвозможно перевести строку!");
+                             throw new RuntimeException(ex);
+                         }
+
+                     });
+                     System.out.println("Основной поток робит...");
+
                  } catch (Exception ex) {
                      ex.printStackTrace();
                  }
